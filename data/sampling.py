@@ -2,7 +2,7 @@ import pandas as pd
 
 # Specify the file paths
 input_file = 'data_preprocessed.csv'
-output_file = 'data_processed-sample.csv'
+output_file = 'data_preprocessed-sample.csv'
 
 # Read the first 100 rows of the original dataset
 df = pd.read_csv(input_file, nrows=100)
