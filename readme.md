@@ -11,7 +11,6 @@ project/
 │   ├── arxiv-metadata-oai.json  # Original dataset
 │   └── data_preprocessed.csv                    # Cleaned and processed data
 │   └── data_clustered.csv                    # Clustered data
-│   └── data_concatenated.csv                    # Concatenated data
 │
 ├── notebooks/
 │   └── analysis.ipynb               # Jupyter notebook for analysis
@@ -19,7 +18,6 @@ project/
 │
 ├── scripts/
 │   └── preprocess.py                # Script for data preprocessing
-│   └── clustering.py                # Script for data clustering
 │
 ├── requirements.txt                      # Required libraries
 └── README.md                             # Project description and instructions
@@ -49,6 +47,6 @@ python scripts/preprocess_data.py
 
 ## Acknowledgments
 
-This project was uses the [arXiv](https://arxiv.org/) dataset.
+This project uses the [arXiv](https://arxiv.org/) dataset.
 
 ---
