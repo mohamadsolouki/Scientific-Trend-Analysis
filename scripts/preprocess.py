@@ -24,13 +24,28 @@ def preprocess_text(text):
     """
     Enhanced preprocessing of the text data.
     """
+    # Check for missing values
     if pd.isna(text):
         return ''
+    
+    # Remove URLs
+    text = re.sub(r'http\S+', '', text)
+
+    # Remove HTML tags
+    text = re.sub(r'<.*?>', '', text)
+
+    # Remove digits
+    text = re.sub(r'\d+', '', text)
+
+    # Remove non-ASCII characters
+    text = re.sub(r'[^\x00-\x7F]+', ' ', text)
+
+    # Remove single characters
+    text = re.sub(r'\s+[a-zA-Z]\s+', ' ', text)
 
     #regex pattern for cleaning
     text = re.sub(r'[^A-Za-z0-9]+', ' ', text) # Remove non-alphanumeric characters
 
-    
     #tokenization
     words = word_tokenize(text.lower())
 
@@ -49,7 +64,7 @@ def preprocess_text(text):
     return ' '.join(words)
 
 
-def preprocess_data(input_file, output_file, chunk_size=20000):
+def preprocess_data(input_file, output_file, chunk_size=5000):
     """
     Main preprocessing function.
     """
