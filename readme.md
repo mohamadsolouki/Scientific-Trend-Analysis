@@ -14,7 +14,7 @@ project/
 │
 ├── notebooks/
 │   └── analysis.ipynb               # Jupyter notebook for analysis
-│   └── clustering.ipynb               # Jupyter notebook for analysis
+│   └── clustering.ipynb               # Jupyter notebook for clustering
 │
 ├── scripts/
 │   └── preprocess.py                # Script for data preprocessing
@@ -36,10 +36,11 @@ pip install -r requirements.txt
 ```
 python scripts/preprocess_data.py
 ```
+4. Open the `clustering.ipynb` notebook and run the cells to perform data clustering with kmeans.
 
-4. Open the `main_notebook.ipynb` notebook and run the cells to perform further analysis and generate visualizations.
+5. Open the `analysis.ipynb` notebook and run the cells to perform further analysis and generate visualizations.
 
-5. Interpret the results and provide insights into the current trends in science based on the clusters.
+6. Interpret the results and provide insights into the current trends in science based on the clusters.
 
 ## Author
 
