@@ -4,14 +4,10 @@ import re
 import nltk
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
-from nltk.util import ngrams
 from nltk.tokenize import word_tokenize
 from tqdm import tqdm
 
 def download_nltk_data():
-    """
-    Ensure necessary NLTK data is downloaded.
-    """
     datasets = ["stopwords", "wordnet", "punkt"]
     for dataset in datasets:
         try:
@@ -19,59 +15,37 @@ def download_nltk_data():
         except LookupError:
             nltk.download(dataset)
 
-
-def preprocess_text(text):
-    """
-    Enhanced preprocessing of the text data.
-    """
-    # Check for missing values
+def preprocess_text(text, stop_words, lemmatizer):
     if pd.isna(text):
         return ''
     
-    # Remove URLs
+    # Cleaning operations
     text = re.sub(r'http\S+', '', text)
-
-    # Remove HTML tags
     text = re.sub(r'<.*?>', '', text)
-
-    # Remove digits
     text = re.sub(r'\d+', '', text)
+    text = re.sub(r'\b\w{1,2}\b', '', text)
+    text = re.sub(r'[^A-Za-z0-9]+', ' ', text)
 
-    # Remove non-ASCII characters
-    text = re.sub(r'[^\x00-\x7F]+', ' ', text)
-
-    # Remove single characters
-    text = re.sub(r'\s+[a-zA-Z]\s+', ' ', text)
-
-    #regex pattern for cleaning
-    text = re.sub(r'[^A-Za-z0-9]+', ' ', text) # Remove non-alphanumeric characters
-
-    #tokenization
     words = word_tokenize(text.lower())
-
-    # Add custom stopwords
-    custom_stopwords = ['use', 'study', 'result', 'show', 'doi' 
-                        'paper', 'author', 'figure', 'table', 'data',
-                        'approach', 'technique','case',
-                        'provide', 'based', 'work', 'present', 'also',
-                        'method', 'model', 'performance', 'problem',
-                        'proposed', 'using']
-    stop_words.update(custom_stopwords)
-
-    # Remove stopwords and lemmatize
     words = [lemmatizer.lemmatize(word) for word in words if word not in stop_words]
 
     return ' '.join(words)
 
-
-def preprocess_data(input_file, output_file, chunk_size=5000):
-    """
-    Main preprocessing function.
-    """
-    # Download necessary NLTK data
+def preprocess_data(input_file, output_file, chunk_size=20000):
     download_nltk_data()
 
-    # Use context manager for file operations
+    stop_words = set(stopwords.words('english'))
+    custom_stopwords = ['use', 'study', 'result', 'show', 'paper', 'figure', 'via', 
+                        'table', 'approach', 'technique','case', 'result', 'provide', 
+                        'based', 'work', 'present', 'method', 'model', 'performance', 
+                        'problem', 'proposed', 'using', 'used', 'new', 'one', 'two', 
+                        'time', 'may', 'number', 'first', 'set', 'state', 'many', 'well',
+                        'different', 'general', 'found', 'property', 'derived', 'also',
+                        'find', 'known', 'given', 'related', 'provided', 'make', 'group',
+                        'called', 'certain', 'lower', 'higher', 'bound', 'setting', 'moreover']
+    stop_words.update(custom_stopwords)
+    lemmatizer = WordNetLemmatizer()
+
     with open(input_file, 'r') as f:
         total_rows = sum(1 for line in f)
 
@@ -79,40 +53,26 @@ def preprocess_data(input_file, output_file, chunk_size=5000):
     
     with tqdm(total=total_rows) as pbar:
         for chunk in pd.read_json(input_file, lines=True, chunksize=chunk_size):
-            chunk = chunk[['title', 'abstract', 'categories', 'update_date']]
+            chunk = chunk[['title', 'abstract', 'categories', 'update_date']].drop_duplicates(subset=['title', 'abstract'])
             
-            # Remove repeated rows
-            chunk = chunk.drop_duplicates(subset=['title', 'abstract'])
-
-            # Vectorized text preprocessing
-            for column in ['title', 'abstract']:
-                chunk[column] = chunk[column].apply(preprocess_text)
-
-            # Concatenate title and abstract columns
+            chunk['title'] = chunk['title'].apply(preprocess_text, args=(stop_words, lemmatizer))
+            chunk['abstract'] = chunk['abstract'].apply(preprocess_text, args=(stop_words, lemmatizer))
+            
             chunk['text'] = chunk['title'] + ' ' + chunk['abstract']
             chunk = chunk.drop(['title', 'abstract'], axis=1)
-
-            # Remove rows with empty text
             chunk = chunk[chunk['text'] != '']
 
-            # Convert update_date to datetime
             chunk['update_date'] = pd.to_datetime(chunk['update_date'])
 
-            # Write to CSV
             if not output_exists:
                 chunk.to_csv(output_file, mode='w', index=False)
-                output_exists = True  # Set the flag to True after first write
+                output_exists = True
             else:
                 chunk.to_csv(output_file, mode='a', index=False, header=False)
             
             pbar.update(chunk_size)
 
-
 if __name__ == "__main__":
-    # Initialize stopwords
-    stop_words = set(stopwords.words('english'))
-    # Initialize lemmatizer
-    lemmatizer = WordNetLemmatizer()
     raw_path = '../data/arxiv-metadata-oai.json'
     processed_path = '../data/data_preprocessed.csv'
     preprocess_data(raw_path, processed_path)
