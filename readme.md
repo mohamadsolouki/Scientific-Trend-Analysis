@@ -34,15 +34,13 @@ project/
 pip install -r requirements.txt
 ```
 
-3. Run the `preprocess_data.py` script to preprocess the data, perform dimensionality reduction, and apply clustering:
+3. Run the notebooks in the following order:
 ```
-python scripts/preprocess_data.py
+insights.ipynb
+preprocessing.ipynb
+clustering.ipynb
+analysis.ipynb
 ```
-4. Open the `clustering.ipynb` notebook and run the cells to perform data clustering with kmeans.
-
-5. Open the `analysis.ipynb` notebook and run the cells to perform further analysis and generate visualizations.
-
-6. Interpret the results and provide insights into the current trends in science based on the clusters.
 
 ## Author
 
