@@ -11,6 +11,8 @@ project/
 │   ├── arxiv-metadata-oai.json        # Original dataset
 │   └── data_preprocessed.csv          # Cleaned and processed data
 │   └── data_clustered.csv             # Clustered data
+
+├── images/                            # Generated visualizations
 │
 ├── notebooks/
 │   └── insights.ipynb                 # Jupyter notebook for EDA and initial insights
