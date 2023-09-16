@@ -8,19 +8,19 @@ This project aims to provide insights into current trends in science based on a 
 project/
 │
 ├── data/
-│   ├── arxiv-metadata-oai.json  # Original dataset
-│   └── data_preprocessed.csv                    # Cleaned and processed data
-│   └── data_clustered.csv                    # Clustered data
+│   ├── arxiv-metadata-oai.json        # Original dataset
+│   └── data_preprocessed.csv          # Cleaned and processed data
+│   └── data_clustered.csv             # Clustered data
 │
 ├── notebooks/
-│   └── analysis.ipynb               # Jupyter notebook for analysis
+│   └── insights.ipynb                 # Jupyter notebook for EDA and initial insights
+│   └── preprocessing.ipynb            # Jupyter notebook for data preprocessing
 │   └── clustering.ipynb               # Jupyter notebook for clustering
+│   └── clustering.ipynb               # Jupyter notebook for analysis
 │
-├── scripts/
-│   └── preprocess.py                # Script for data preprocessing
 │
-├── requirements.txt                      # Required libraries
-└── README.md                             # Project description and instructions
+├── requirements.txt                   # Required libraries
+└── README.md                          # Project description and instructions
 ```
 
 ## Instructions to Run the Code
